@@ -11,7 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -60,7 +60,7 @@ public class ChallengeApplication implements CommandLineRunner {
 				.email("johndoe@gmail.com")
 				.zipCode("58974521")
 				.nationalId("2456854")
-				.birthday(new SimpleDateFormat("dd/MM/yyyy").parse("02/10/1980"))
+				.birthday(LocalDate.of(1980, 10, 2))
 				.build();
 
 		Supplier supplier2 = Supplier.builder()

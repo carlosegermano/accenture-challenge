@@ -4,17 +4,18 @@ import com.accenture.challenge.enums.Person;
 import com.accenture.challenge.validations.ConditionalValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Pattern;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ConditionalValidation(
         conditionalProperty = "personType", values = {"NATURAL_PERSON"},
         requiredProperties = {"nationalId", "birthday"},
@@ -32,4 +33,6 @@ public class SupplierCreationDTO implements Serializable {
     private String nationalId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private String birthday;
+    @Builder.Default
+    private List<Company> companies = new ArrayList<>();
 }

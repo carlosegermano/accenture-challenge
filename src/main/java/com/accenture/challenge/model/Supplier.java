@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -45,7 +45,7 @@ public class Supplier implements Serializable {
     private String zipCode;
     private String nationalId;
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date birthday;
+    private LocalDate birthday;
 
     @JsonIgnore
     @Builder.Default

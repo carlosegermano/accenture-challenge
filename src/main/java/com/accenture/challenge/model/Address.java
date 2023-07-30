@@ -21,4 +21,5 @@ public class Address implements Serializable {
     private String cidade;
     private String bairro;
     private String logradouro;
+    private String aux;
 }

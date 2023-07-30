@@ -1,6 +1,7 @@
 package com.accenture.challenge.controllers;
 
 import com.accenture.challenge.model.Company;
+import com.accenture.challenge.model.CompanyCreationDTO;
 import com.accenture.challenge.services.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +23,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping
-    public Company save(@RequestBody Company company) {
+    public Company save(@RequestBody CompanyCreationDTO company) {
         return this.companyService.save(company);
     }
 

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class SupplierServiceImpl implements SupplierService {
                         .email(supplier.getEmail())
                         .zipCode(supplier.getZipCode())
                         .nationalId(supplier.getNationalId())
-                        .birthday(new Date(supplier.getBirthday()))
+                        .birthday(LocalDate.parse(supplier.getBirthday()))
                         .build()
         );
     }

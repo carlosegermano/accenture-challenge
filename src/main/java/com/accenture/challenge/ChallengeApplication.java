@@ -1,5 +1,7 @@
 package com.accenture.challenge;
 
+import com.accenture.challenge.enums.Person;
+import com.accenture.challenge.model.Address;
 import com.accenture.challenge.model.Company;
 import com.accenture.challenge.model.Supplier;
 import com.accenture.challenge.repositories.CompanyRepository;
@@ -11,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -30,6 +31,14 @@ public class ChallengeApplication implements CommandLineRunner {
 				.cnpj("90052795000174")
 				.tradeName("AlfaCompany")
 				.zipCode("58649575")
+				.address(Address.builder()
+						.cep("58297000")
+						.uf("PB")
+						.cidade("Rio Tinto")
+						.bairro("Centro")
+						.logradouro("Rua do Sol")
+						.build()
+				)
 				.build();
 		Company company2 = Company.builder()
 				.cnpj("98411506000198")
@@ -46,6 +55,7 @@ public class ChallengeApplication implements CommandLineRunner {
 
 		Supplier supplier1 = Supplier.builder()
 				.nationalDocument("42917397020")
+				.personType(Person.NATURAL_PERSON)
 				.name("John Doe")
 				.email("johndoe@gmail.com")
 				.zipCode("58974521")
@@ -55,6 +65,7 @@ public class ChallengeApplication implements CommandLineRunner {
 
 		Supplier supplier2 = Supplier.builder()
 				.nationalDocument("02253913000145")
+				.personType(Person.LEGAL_PERSON)
 				.name("John Doe")
 				.email("johndoe@gmail.com")
 				.zipCode("58974521")
@@ -62,6 +73,7 @@ public class ChallengeApplication implements CommandLineRunner {
 
 		Supplier supplier3 = Supplier.builder()
 				.nationalDocument("74351124000158")
+				.personType(Person.LEGAL_PERSON)
 				.name("Jane Doe")
 				.email("janedoe@gmail.com")
 				.zipCode("75845122")

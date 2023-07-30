@@ -1,5 +1,7 @@
 package com.accenture.challenge.services;
 
+import com.accenture.challenge.model.Address;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -12,12 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class NationalDocumentValidator {
+public class ZipCodeService {
 
     @Value("${url.api.cep}")
     private String URL_CEP;
 
-    public boolean isZipCodeValid(String zipCode) {
+    public Address getAddressByZipCode(String zipCode) {
         RestTemplate restTemplate = new RestTemplate();
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
@@ -27,8 +29,17 @@ public class NationalDocumentValidator {
         messageConverters.add(converter);
         restTemplate.setMessageConverters(messageConverters);
 
-        Object address = restTemplate.getForObject(this.URL_CEP.concat("/").concat(zipCode), Object.class);
+        Object object = restTemplate.getForObject(this.URL_CEP.concat("/").concat(zipCode), Object.class);
 
+        if (this.isZipCodeValid(object)) {
+            Address address = new ObjectMapper().convertValue(object, Address.class);
+            return address;
+        } else {
+            throw new IllegalArgumentException("ZipCode invalid!");
+        }
+    }
+
+    public boolean isZipCodeValid(Object address) {
         return address != null && !(address instanceof ArrayList<?>);
     }
 }

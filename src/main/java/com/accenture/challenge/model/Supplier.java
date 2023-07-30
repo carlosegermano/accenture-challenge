@@ -1,11 +1,16 @@
 package com.accenture.challenge.model;
 
 import com.accenture.challenge.enums.Person;
-import com.accenture.challenge.validations.ConditionalValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -26,10 +31,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "supplier")
-@ConditionalValidation(
-        conditionalProperty = "personType", values = {"NATURAL_PERSON"},
-        requiredProperties = {"naturalId", "birthday"},
-        message = "Natural ID and Birthday are required for Natural Person.")
 public class Supplier implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -1,14 +1,22 @@
 package com.accenture.challenge.controllers;
 
 import com.accenture.challenge.model.Supplier;
+import com.accenture.challenge.model.SupplierCreationDTO;
 import com.accenture.challenge.services.SupplierService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +28,7 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     @PostMapping
-    public Supplier saveSupplier(@Valid @RequestBody Supplier supplier) throws Exception {
+    public Supplier saveSupplier(@Valid @RequestBody SupplierCreationDTO supplier) throws Exception {
         return this.supplierService.save(supplier);
     }
 

@@ -1,17 +1,18 @@
 package com.accenture.challenge.services;
 
 import com.accenture.challenge.validations.ConditionalValidation;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
+@Component
 public class ConditionalValidator implements ConstraintValidator<ConditionalValidation, Object> {
 
     private static final Logger log = LoggerFactory.getLogger(ConditionalValidator.class);
@@ -32,7 +33,7 @@ public class ConditionalValidator implements ConstraintValidator<ConditionalVali
     @Override
     public boolean isValid(Object object, ConstraintValidatorContext context) {
         try {
-            Object conditionalPropertyValue = BeanUtils.getPropertyDescriptor(object.getClass(), conditionalProperty);
+            Object conditionalPropertyValue = BeanUtils.getProperty(object, conditionalProperty);
             if (doConditionalValidation(conditionalPropertyValue)) {
                 return validateRequiredProperties(object, context);
             }
@@ -45,8 +46,8 @@ public class ConditionalValidator implements ConstraintValidator<ConditionalVali
     private boolean validateRequiredProperties(Object object, ConstraintValidatorContext context) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         boolean isValid = true;
         for (String property : requiredProperties) {
-            Object requiredValue = BeanUtils.getPropertyDescriptor(object.getClass(), property);
-            boolean isPresent = requiredValue != null && !isEmpty(requiredValue);
+            Object requiredValue = BeanUtils.getProperty(object, property);
+            boolean isPresent = requiredValue != null && !ObjectUtils.isEmpty(requiredValue);
             if (!isPresent) {
                 isValid = false;
                 context.disableDefaultConstraintViolation();

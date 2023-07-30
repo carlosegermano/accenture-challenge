@@ -1,5 +1,6 @@
 package com.accenture.challenge.services;
 
+import com.accenture.challenge.model.Address;
 import com.accenture.challenge.model.Company;
 import com.accenture.challenge.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +14,12 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
-    private final NationalDocumentValidator nationalDocumentValidator;
+    private final ZipCodeService zipCodeService;
 
     @Override
     public Company save(Company company) {
-        if (!this.nationalDocumentValidator.isZipCodeValid(company.getZipCode())) {
-            throw new IllegalArgumentException("ZipCode is not valid!");
-        }
+        Address address = this.zipCodeService.getAddressByZipCode(company.getZipCode());
+        company.setAddress(address);
         return this.companyRepository.save(company);
     }
 

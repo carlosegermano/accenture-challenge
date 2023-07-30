@@ -1,21 +1,15 @@
 package com.accenture.challenge.services;
 
-import com.accenture.challenge.enums.Person;
 import com.accenture.challenge.model.Supplier;
+import com.accenture.challenge.model.SupplierCreationDTO;
 import com.accenture.challenge.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,25 +18,26 @@ import java.util.Optional;
 public class SupplierServiceImpl implements SupplierService {
 
     private final SupplierRepository supplierRepository;
-    private final NationalDocumentValidator nationalDocumentValidator;
+    private final ZipCodeService zipCodeService;
 
     @Override
-    public Supplier save(Supplier supplier) throws Exception {
+    public Supplier save(SupplierCreationDTO supplier) throws Exception {
 
-        if (!this.nationalDocumentValidator.isZipCodeValid(supplier.getZipCode())) {
+        if (!this.zipCodeService.isZipCodeValid(supplier.getZipCode())) {
             throw new IllegalArgumentException("ZipCode is not valid!");
         }
 
-        this.setPersonType(supplier);
-        return this.supplierRepository.save(supplier);
-    }
-
-    private void setPersonType(Supplier supplier) {
-        if (supplier.getNationalDocument().length() == 11) {
-            supplier.setPersonType(Person.NATURAL_PERSON);
-        } else {
-            supplier.setPersonType(Person.LEGAL_PERSON);
-        }
+        return this.supplierRepository.save(
+                Supplier.builder()
+                        .nationalDocument(supplier.getNationalDocument())
+                        .personType(supplier.getPersonType())
+                        .name(supplier.getName())
+                        .email(supplier.getEmail())
+                        .zipCode(supplier.getZipCode())
+                        .nationalId(supplier.getNationalId())
+                        .birthday(new Date(supplier.getBirthday()))
+                        .build()
+        );
     }
 
     @Override

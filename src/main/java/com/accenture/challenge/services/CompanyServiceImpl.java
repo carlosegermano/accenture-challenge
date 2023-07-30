@@ -13,9 +13,13 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final NationalDocumentValidator nationalDocumentValidator;
 
     @Override
     public Company save(Company company) {
+        if (!this.nationalDocumentValidator.isZipCodeValid(company.getZipCode())) {
+            throw new IllegalArgumentException("ZipCode is not valid!");
+        }
         return this.companyRepository.save(company);
     }
 

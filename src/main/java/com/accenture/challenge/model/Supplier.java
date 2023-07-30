@@ -1,8 +1,10 @@
 package com.accenture.challenge.model;
 
-import com.accenture.challenge.model.Company;
+import com.accenture.challenge.enums.Person;
+import com.accenture.challenge.validations.ConditionalValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,21 +26,29 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "supplier")
+@ConditionalValidation(
+        conditionalProperty = "personType", values = {"NATURAL_PERSON"},
+        requiredProperties = {"naturalId", "birthday"},
+        message = "Natural ID and Birthday are required for Natural Person.")
 public class Supplier implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String cpfOrCnpj;
+    @Column(unique = true)
+    private String nationalDocument;
+    private Person personType;
     private String name;
     private String email;
     private String zipCode;
     private String nationalId;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthday;
-    @Builder.Default
+
     @JsonIgnore
+    @Builder.Default
     @ManyToMany(mappedBy="suppliers")
+    @JsonManagedReference
     private List<Company> companies = new ArrayList<>();
 }

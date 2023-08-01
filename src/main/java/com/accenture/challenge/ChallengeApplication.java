@@ -66,8 +66,8 @@ public class ChallengeApplication implements CommandLineRunner {
 		Supplier supplier2 = Supplier.builder()
 				.nationalDocument("02253913000145")
 				.personType(Person.LEGAL_PERSON)
-				.name("John Doe")
-				.email("johndoe@gmail.com")
+				.name("John Dave")
+				.email("johndave@gmail.com")
 				.zipCode("58974521")
 				.build();
 

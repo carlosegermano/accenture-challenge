@@ -41,6 +41,7 @@ public class Supplier implements Serializable {
     private String nationalDocument;
     private Person personType;
     private String name;
+    @Column(unique = true)
     private String email;
     private String zipCode;
     private String nationalId;

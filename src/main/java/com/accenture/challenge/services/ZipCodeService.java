@@ -1,5 +1,6 @@
 package com.accenture.challenge.services;
 
+import com.accenture.challenge.exceptions.ZipCodeInvalidException;
 import com.accenture.challenge.model.Address;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,15 +32,11 @@ public class ZipCodeService {
 
         Object object = restTemplate.getForObject(this.URL_CEP.concat("/").concat(zipCode), Object.class);
 
-        if (this.isZipCodeValid(object)) {
+       try {
             Address address = new ObjectMapper().convertValue(object, Address.class);
             return address;
-        } else {
-            throw new IllegalArgumentException("ZipCode invalid!");
+        } catch (Exception e){
+            throw new ZipCodeInvalidException("O CEP é inválido!");
         }
-    }
-
-    public boolean isZipCodeValid(Object address) {
-        return address != null && !(address instanceof ArrayList<?>);
     }
 }

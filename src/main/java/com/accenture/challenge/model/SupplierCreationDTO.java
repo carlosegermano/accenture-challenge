@@ -19,7 +19,7 @@ import java.util.List;
 @ConditionalValidation(
         conditionalProperty = "personType", values = {"NATURAL_PERSON"},
         requiredProperties = {"nationalId", "birthday"},
-        message = "Natural ID and Birthday are required for Natural Person.")
+        message = "Identidade e data de nascimento é obrigatório para pessoa física!")
 public class SupplierCreationDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 

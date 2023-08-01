@@ -1,12 +1,13 @@
 package com.accenture.challenge.services;
 
+import com.accenture.challenge.exceptions.IllegalArgumentException;
+import com.accenture.challenge.exceptions.ObjectNotFoundException;
 import com.accenture.challenge.model.Address;
 import com.accenture.challenge.model.Company;
 import com.accenture.challenge.model.CompanyCreationDTO;
 import com.accenture.challenge.model.Supplier;
 import com.accenture.challenge.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -19,7 +20,6 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
-    private final SupplierService supplierService;
     private final ZipCodeService zipCodeService;
 
     private static final String STATE = "PR";
@@ -30,11 +30,7 @@ public class CompanyServiceImpl implements CompanyService {
         company.setAddress(address);
 
         if (company.getAddress().getUf().equals(STATE)) {
-            for (Supplier supplier : company.getSuppliers()) {
-                if (!ObjectUtils.isEmpty(supplier.getBirthday()) && isUnderage(supplier)) {
-                    throw new IllegalArgumentException("Underage supplier is not allowed in this state!");
-                }
-            }
+            this.ageVerify(company.getSuppliers());
         }
 
         return this.companyRepository.save(
@@ -48,14 +44,10 @@ public class CompanyServiceImpl implements CompanyService {
         );
     }
 
-    private boolean isUnderage(Supplier obj) {
-        return Period.between(obj.getBirthday(), LocalDate.now()).getYears() < 18;
-    }
-
     @Override
     public Company findById(Long id) {
         return this.companyRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(Company.class, String.valueOf(id)));
+                .orElseThrow(() -> new ObjectNotFoundException("Empresa não encontrada!"));
     }
 
     @Override
@@ -65,15 +57,32 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company update(Company company, Long companyId) {
+        Address address = this.zipCodeService.getAddressByZipCode(company.getZipCode());
+
+        this.ageVerify(company.getSuppliers());
+
         Company companySaved = this.findById(companyId);
         companySaved.setCnpj(company.getCnpj());
         companySaved.setTradeName(company.getTradeName());
         companySaved.setZipCode(company.getZipCode());
+        companySaved.setAddress(address);
         return this.companyRepository.save(companySaved);
     }
 
     @Override
     public void delete(Long companyId) {
         this.companyRepository.deleteById(companyId);
+    }
+
+    private void ageVerify(List<Supplier> list) {
+        for (Supplier supplier : list) {
+            if (!ObjectUtils.isEmpty(supplier.getBirthday()) && isUnderage(supplier)) {
+                throw new IllegalArgumentException("Fornecedor deste estado deve ter mais de 18 anos!");
+            }
+        }
+    }
+
+    private boolean isUnderage(Supplier obj) {
+        return Period.between(obj.getBirthday(), LocalDate.now()).getYears() < 18;
     }
 }

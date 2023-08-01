@@ -1,5 +1,6 @@
 package com.accenture.challenge.services;
 
+import com.accenture.challenge.exceptions.DataIntegrityValidationException;
 import com.accenture.challenge.exceptions.IllegalArgumentException;
 import com.accenture.challenge.exceptions.ObjectNotFoundException;
 import com.accenture.challenge.model.Address;
@@ -8,6 +9,7 @@ import com.accenture.challenge.model.CompanyCreationDTO;
 import com.accenture.challenge.model.Supplier;
 import com.accenture.challenge.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -33,15 +35,19 @@ public class CompanyServiceImpl implements CompanyService {
             this.ageVerify(company.getSuppliers());
         }
 
-        return this.companyRepository.save(
-                Company.builder()
-                        .cnpj(company.getCnpj())
-                        .tradeName(company.getTradeName())
-                        .zipCode(company.getZipCode())
-                        .address(company.getAddress())
-                        .suppliers(company.getSuppliers())
-                        .build()
-        );
+        try {
+            return this.companyRepository.save(
+                    Company.builder()
+                            .cnpj(company.getCnpj())
+                            .tradeName(company.getTradeName())
+                            .zipCode(company.getZipCode())
+                            .address(company.getAddress())
+                            .suppliers(company.getSuppliers())
+                            .build()
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityValidationException("Campo já existente!");
+        }
     }
 
     @Override
@@ -66,7 +72,12 @@ public class CompanyServiceImpl implements CompanyService {
         companySaved.setTradeName(company.getTradeName());
         companySaved.setZipCode(company.getZipCode());
         companySaved.setAddress(address);
-        return this.companyRepository.save(companySaved);
+
+        try {
+            return this.companyRepository.save(companySaved);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityValidationException("Campo já existente!");
+        }
     }
 
     @Override

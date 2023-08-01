@@ -1,11 +1,13 @@
 package com.accenture.challenge.services;
 
+import com.accenture.challenge.exceptions.DataIntegrityValidationException;
 import com.accenture.challenge.exceptions.ObjectNotFoundException;
 import com.accenture.challenge.model.Supplier;
 import com.accenture.challenge.model.SupplierCreationDTO;
 import com.accenture.challenge.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,17 +31,21 @@ public class SupplierServiceImpl implements SupplierService {
 
         this.zipCodeService.getAddressByZipCode(supplier.getZipCode());
 
-        return this.supplierRepository.save(
-                Supplier.builder()
-                        .nationalDocument(supplier.getNationalDocument())
-                        .personType(supplier.getPersonType())
-                        .name(supplier.getName())
-                        .email(supplier.getEmail())
-                        .zipCode(supplier.getZipCode())
-                        .nationalId(supplier.getNationalId())
-                        .birthday(!ObjectUtils.isEmpty(supplier.getBirthday()) ? getBirthday(supplier) : null)
-                        .build()
-        );
+        try {
+            return this.supplierRepository.save(
+                    Supplier.builder()
+                            .nationalDocument(supplier.getNationalDocument())
+                            .personType(supplier.getPersonType())
+                            .name(supplier.getName())
+                            .email(supplier.getEmail())
+                            .zipCode(supplier.getZipCode())
+                            .nationalId(supplier.getNationalId())
+                            .birthday(!ObjectUtils.isEmpty(supplier.getBirthday()) ? getBirthday(supplier) : null)
+                            .build()
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityValidationException("Campo já existente!");
+        }
     }
 
     @NotNull
@@ -75,7 +81,12 @@ public class SupplierServiceImpl implements SupplierService {
         supp.setName(supplier.getName());
         supp.setEmail(supplier.getEmail());
         supp.setZipCode(supplier.getZipCode());
-        return this.supplierRepository.save(supp);
+
+        try {
+            return this.supplierRepository.save(supp);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityValidationException("Campo já existente!");
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.accenture.challenge.validations;
 
-import com.accenture.challenge.services.ConditionalValidator;
+import com.accenture.challenge.services.NationalDocumentValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -12,16 +12,11 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {ConditionalValidator.class})
-public @interface ConditionalValidation {
+@Constraint(validatedBy = {NationalDocumentValidator.class})
+public @interface NationalDocumentValidation {
 
     String message() default "Erro de validação.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    String conditionalProperty();
-
-    String[] requiredProperties();
-
-    String[] values();
 }

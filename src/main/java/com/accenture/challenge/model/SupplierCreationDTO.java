@@ -2,6 +2,7 @@ package com.accenture.challenge.model;
 
 import com.accenture.challenge.enums.Person;
 import com.accenture.challenge.validations.ConditionalValidation;
+import com.accenture.challenge.validations.NationalDocumentValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NationalDocumentValidation
 @ConditionalValidation(
         conditionalProperty = "personType", values = {"NATURAL_PERSON"},
         requiredProperties = {"nationalId", "birthday"},

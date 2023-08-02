@@ -124,6 +124,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public void delete(Long supplierId) {
+        this.findById(supplierId);
         this.supplierRepository.deleteById(supplierId);
     }
 

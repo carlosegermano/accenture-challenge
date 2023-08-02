@@ -15,7 +15,6 @@ public class NationalDocumentValidator implements ConstraintValidator<NationalDo
 
     @Override
     public void initialize(NationalDocumentValidation constraintAnnotation) {
-//        ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override

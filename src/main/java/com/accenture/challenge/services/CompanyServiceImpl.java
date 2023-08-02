@@ -83,6 +83,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void delete(Long companyId) {
+        this.findById(companyId);
         this.companyRepository.deleteById(companyId);
     }
 

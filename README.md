@@ -45,4 +45,4 @@ Carlos Eduardo de Sousa Germano
 
 [Linkedin](https://www.linkedin.com/in/carloseduardogermano/)
 
-[site_pessoal](https://carloseduardo-cv.netlify.app/)
+[Site Pessoal](https://carloseduardo-cv.netlify.app/)

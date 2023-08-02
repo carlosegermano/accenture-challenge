@@ -1,4 +1,4 @@
-# Sistema Accenture Challenge
+# Accenture Challenge
 [![NPM](https://img.shields.io/npm/l/react)](https://github.com/carlosegermano/cursomc-backend/blob/master/LICENSE) 
 
 # Sobre o projeto

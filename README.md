@@ -3,7 +3,7 @@
 
 # Sobre o projeto
 
-Trata-se de uma aplicação inicial full stack web para gerenciamento e controle de empresas e fornecedores. Contém duas telas responsáveis por listar empresas e fornecedores, bem como adicionar novos, editar e excluir. Além disso é possível fazer o relacionamento entre eles, adicionando fornecedores a empresas.
+Trata-se de uma aplicação inicial *full stack* web para gerenciamento e controle de empresas e fornecedores. Contém duas telas responsáveis por listar empresas e fornecedores, bem como adicionar novos, editar e excluir. Além disso é possível fazer o relacionamento entre eles, adicionando fornecedores a empresas.
 
 Alguns recursos utilizados foram listagem com paginação, buscas por colunas específicas, select multiplo, entre outros.
 
@@ -19,6 +19,7 @@ Alguns recursos utilizados foram listagem com paginação, buscas por colunas es
 - Spring Boot
 - Intellij
 - JPA / Hibernate
+- Mockito / Junit
 - Maven
 - Postman
 
@@ -34,7 +35,7 @@ Alguns recursos utilizados foram listagem com paginação, buscas por colunas es
 
 - Postgresql
 
-## Repositório do front
+## Repositório do frontend
 
 [https://github.com/carlosegermano/accenture-challenge](https://github.com/carlosegermano/accenture-challenge-front)
 

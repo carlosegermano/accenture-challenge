@@ -2,6 +2,7 @@ package com.accenture.challenge.controllers;
 
 import com.accenture.challenge.model.Supplier;
 import com.accenture.challenge.model.SupplierCreationDTO;
+import com.accenture.challenge.model.SupplierDTO;
 import com.accenture.challenge.services.SupplierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +29,12 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     @PostMapping
-    public Supplier saveSupplier(@Valid @RequestBody SupplierCreationDTO supplier) throws Exception {
+    public SupplierDTO saveSupplier(@Valid @RequestBody SupplierCreationDTO supplier) throws Exception {
         return this.supplierService.save(supplier);
     }
 
     @GetMapping(value = "/{supplierId}")
-    public Supplier findById(@PathVariable Long supplierId) {
+    public SupplierDTO findById(@PathVariable Long supplierId) {
         return this.supplierService.findById(supplierId);
     }
 
@@ -51,7 +52,7 @@ public class SupplierController {
     }
 
     @PutMapping(value = "/{supplierId}")
-    public Supplier update(@RequestBody Supplier supplier, @PathVariable Long supplierId) {
+    public Supplier update(@RequestBody SupplierCreationDTO supplier, @PathVariable Long supplierId) {
         return this.supplierService.update(supplier, supplierId);
     }
 

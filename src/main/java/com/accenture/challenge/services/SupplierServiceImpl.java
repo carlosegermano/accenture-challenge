@@ -4,6 +4,7 @@ import com.accenture.challenge.exceptions.DataIntegrityValidationException;
 import com.accenture.challenge.exceptions.ObjectNotFoundException;
 import com.accenture.challenge.model.Supplier;
 import com.accenture.challenge.model.SupplierCreationDTO;
+import com.accenture.challenge.model.SupplierDTO;
 import com.accenture.challenge.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -27,12 +28,12 @@ public class SupplierServiceImpl implements SupplierService {
     private final ZipCodeService zipCodeService;
 
     @Override
-    public Supplier save(SupplierCreationDTO supplier) {
+    public SupplierDTO save(SupplierCreationDTO supplier) {
 
         this.zipCodeService.getAddressByZipCode(supplier.getZipCode());
 
         try {
-            return this.supplierRepository.save(
+            Supplier saved = this.supplierRepository.save(
                     Supplier.builder()
                             .nationalDocument(supplier.getNationalDocument())
                             .personType(supplier.getPersonType())
@@ -40,25 +41,47 @@ public class SupplierServiceImpl implements SupplierService {
                             .email(supplier.getEmail())
                             .zipCode(supplier.getZipCode())
                             .nationalId(supplier.getNationalId())
-                            .birthday(!ObjectUtils.isEmpty(supplier.getBirthday()) ? getBirthday(supplier) : null)
+                            .birthday(
+                                    !ObjectUtils.isEmpty(supplier.getBirthday())
+                                            ? parseBirthday(supplier.getBirthday())
+                                            : null
+                            )
                             .build()
             );
+
+            return SupplierDTO.builder()
+                    .id(saved.getId())
+                    .nationalDocument(saved.getNationalDocument())
+                    .personType(saved.getPersonType())
+                    .name(saved.getName())
+                    .email(saved.getEmail())
+                    .zipCode(saved.getZipCode())
+                    .nationalId(saved.getNationalId())
+                    .birthday(String.valueOf(saved.getBirthday()))
+                    .companies(saved.getCompanies())
+                    .build();
+
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityValidationException("Campo já existente!");
         }
     }
 
-    @NotNull
-    private static LocalDate getBirthday(SupplierCreationDTO supplier) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        OffsetDateTime dateTime = OffsetDateTime.parse(supplier.getBirthday());
-        return LocalDate.parse(dateTime.format(dtf));
-    }
-
     @Override
-    public Supplier findById(Long id) {
-        return this.supplierRepository.findById(id)
+    public SupplierDTO findById(Long id) {
+         Supplier supplier = this.supplierRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Fornecedor não encontrado!"));
+
+         return SupplierDTO.builder()
+                .id(supplier.getId())
+                .nationalDocument(supplier.getNationalDocument())
+                .personType(supplier.getPersonType())
+                .name(supplier.getName())
+                .email(supplier.getEmail())
+                .zipCode(supplier.getZipCode())
+                .nationalId(supplier.getNationalId())
+                .birthday(String.valueOf(supplier.getBirthday()))
+                .companies(supplier.getCompanies())
+                .build();
     }
 
     @Override
@@ -72,18 +95,28 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Supplier update(Supplier supplier, Long supplierId) {
-        Supplier supp = findById(supplierId);
-        supp.setNationalDocument(supplier.getNationalDocument());
+    public Supplier update(SupplierCreationDTO supplier, Long supplierId) {
 
         this.zipCodeService.getAddressByZipCode(supplier.getZipCode());
 
-        supp.setName(supplier.getName());
-        supp.setEmail(supplier.getEmail());
-        supp.setZipCode(supplier.getZipCode());
+        Supplier supplierToSave = Supplier.builder()
+                .id(supplier.getId())
+                .nationalDocument(supplier.getNationalDocument())
+                .personType(supplier.getPersonType())
+                .name(supplier.getName())
+                .email(supplier.getEmail())
+                .zipCode(supplier.getZipCode())
+                .nationalId(supplier.getNationalId())
+                .birthday(
+                        !ObjectUtils.isEmpty(supplier.getBirthday())
+                                ? parseBirthday(supplier.getBirthday().toString())
+                                : null
+                )
+                .companies(supplier.getCompanies())
+                .build();
 
         try {
-            return this.supplierRepository.save(supp);
+            return this.supplierRepository.save(supplierToSave);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityValidationException("Campo já existente!");
         }
@@ -92,5 +125,12 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public void delete(Long supplierId) {
         this.supplierRepository.deleteById(supplierId);
+    }
+
+    @NotNull
+    private static LocalDate parseBirthday(String date) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        OffsetDateTime dateTime = OffsetDateTime.parse(date);
+        return LocalDate.parse(dateTime.format(dtf));
     }
 }

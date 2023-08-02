@@ -72,6 +72,7 @@ public class CompanyServiceImpl implements CompanyService {
         companySaved.setTradeName(company.getTradeName());
         companySaved.setZipCode(company.getZipCode());
         companySaved.setAddress(address);
+        companySaved.setSuppliers(company.getSuppliers());
 
         try {
             return this.companyRepository.save(companySaved);

@@ -43,6 +43,6 @@ Alguns recursos utilizados foram listagem com paginação, buscas por colunas es
 
 Carlos Eduardo de Sousa Germano
 
-https://www.linkedin.com/in/carloseduardogermano/
+[Linkedin](https://www.linkedin.com/in/carloseduardogermano/)
 
-https://www.carloseduardo-cv.netlify.app
+[site_pessoal](https://carloseduardo-cv.netlify.app/)https://carloseduardo-cv.netlify.app/
